@@ -10,7 +10,72 @@ Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions
 
 ## Use a skill
 
-Skills use the shared `SKILL.md` format. Copy a skill's entire folder from `skills/` into a supported location, keeping the folder directly under the skills directory. Check existing local changes before replacing a skill. Include the license when sharing copies.
+Install directly from GitHub with [the Skills CLI](https://github.com/vercel-labs/skills). Requires Node.js and npm; no npm package publication or directory registration is needed for this repository.
+
+[![Install for Codex](https://img.shields.io/badge/Install_for-Codex-111827?style=for-the-badge)](#codex)
+[![Install for Claude Code](https://img.shields.io/badge/Install_for-Claude_Code-D97757?style=for-the-badge)](#claude-code)
+[![Install for Cursor](https://img.shields.io/badge/Install_for-Cursor-2563EB?style=for-the-badge)](#cursor)
+[![Ask your agent](https://img.shields.io/badge/Ask_your_agent-to_install-15803D?style=for-the-badge)](#ask-your-agent-to-install)
+
+Click a button to open its instructions, then copy the command into your terminal or the prompt into your agent. README buttons do not execute commands. The `code-review` skill is currently a placeholder; installing it does not provide a working review workflow yet.
+
+Run installation commands from the project where you want the skill available. Check existing local skill changes before installing. The examples select one skill and agent explicitly and skip installation prompts.
+
+### Codex
+
+```sh
+npx -y skills add jaisal1024/skills --skill code-review --agent codex --yes
+```
+
+Once the skill has instructions, invoke it with `$code-review`.
+
+### Claude Code
+
+```sh
+npx -y skills add jaisal1024/skills --skill code-review --agent claude-code --yes
+```
+
+Once the skill has instructions, invoke it with `/code-review`.
+
+### Cursor
+
+```sh
+npx -y skills add jaisal1024/skills --skill code-review --agent cursor --yes
+```
+
+Once the skill has instructions, ask Cursor to use the `code-review` skill.
+
+### Ask your agent to install
+
+Copy this prompt into Codex, Claude Code, or Cursor:
+
+```text
+Install the code-review skill from jaisal1024/skills into the current project
+for the agent I am using. Check for existing local skill changes first and
+preserve them. Use the Skills CLI with --skill code-review and the matching
+--agent value (codex, claude-code, or cursor). After installation, confirm
+that the agent's skill directory contains a readable SKILL.md. This skill
+is currently a placeholder; report that limitation.
+```
+
+### Discover, share, and update
+
+```sh
+# List available skills without installing
+npx -y skills add jaisal1024/skills --list
+
+# Check for updates to installed skills
+npx -y skills check
+
+# Update installed skills
+npx -y skills update
+```
+
+Add `--global` to an installation command to make the skill available across projects for that agent. Replace `code-review` with another skill name as this catalog grows. Share this README or the appropriate installation command with users; private repositories require their own GitHub access. Review local changes before updating installed skills.
+
+### Manual installation
+
+Skills use the shared `SKILL.md` format. You can also copy a skill's entire folder from `skills/` into a supported location, keeping the folder directly under the skills directory. Check existing local changes before replacing a skill. Include the license when sharing copies.
 
 | Agent | Project installation | Personal installation |
 | --- | --- | --- |
