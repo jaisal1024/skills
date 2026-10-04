@@ -30,7 +30,7 @@ elif args[:2] == ["pr", "merge"] and os.environ.get("MOCK_MERGE_FAIL"):
 
 
 class ReleaseAutomationTest(unittest.TestCase):
-    def run_automation(self, *, author="github-actions[bot]", files=None,
+    def run_automation(self, *, author="skills-release[bot]", files=None,
                        merged="true", merge_fail=False, new_prs='[{"number": 7}]'):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -43,7 +43,7 @@ class ReleaseAutomationTest(unittest.TestCase):
                   "head": {"sha": "abc123", "ref": "release-please--branches--main",
                            "repo": {"full_name": "owner/skills"}}}
             env = {**os.environ, "PATH": str(root) + os.pathsep + os.environ["PATH"],
-                   "GH_REPO": "owner/skills", "RELEASE_BRANCH": "main",
+                   "GH_REPO": "owner/skills", "RELEASE_BOT_LOGIN": "skills-release[bot]", "RELEASE_BRANCH": "main",
                    "RELEASE_PRS": new_prs, "MOCK_PR": json.dumps(pr),
                    "MOCK_FILES": json.dumps(files or [{"filename": "version.txt"}]),
                    "MOCK_MERGED": merged, "CALL_LOG": str(root / "calls")}
@@ -71,6 +71,11 @@ class ReleaseAutomationTest(unittest.TestCase):
 
     def test_human_pr_cannot_receive_exemptions(self):
         result, calls = self.run_automation(author="someone")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any("/statuses/" in " ".join(call) for call in calls))
+
+    def test_other_bot_cannot_receive_exemptions(self):
+        result, calls = self.run_automation(author="github-actions[bot]")
         self.assertNotEqual(result.returncode, 0)
         self.assertFalse(any("/statuses/" in " ".join(call) for call in calls))
 

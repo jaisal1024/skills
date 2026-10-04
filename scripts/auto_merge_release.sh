@@ -5,12 +5,13 @@ set -euo pipefail
 : "${RELEASE_PRS:?release-please PR output is required}"
 : "${GH_REPO:?repository is required}"
 : "${RELEASE_BRANCH:?release branch is required}"
+: "${RELEASE_BOT_LOGIN:?dedicated release app bot login is required}"
 
 jq -e 'type == "array" and all(.[]; (.number | type) == "number")' <<< "$RELEASE_PRS" > /dev/null
 pending=$(gh api "repos/$GH_REPO/pulls" --method GET -f state=open \
   -f base="$RELEASE_BRANCH" --paginate --slurp |
-  jq --arg repo "$GH_REPO" --arg base "$RELEASE_BRANCH" '[flatten[] |
-    select(.user.login == "github-actions[bot]" and .base.ref == $base and
+  jq --arg repo "$GH_REPO" --arg base "$RELEASE_BRANCH" --arg bot "$RELEASE_BOT_LOGIN" '[flatten[] |
+    select(.user.login == $bot and .base.ref == $base and
       .head.repo.full_name == $repo and
       (.head.ref | startswith("release-please--branches--")) and
       any(.labels[]; .name == "autorelease: pending")) | {number}]')
@@ -19,9 +20,9 @@ merged=false
 while IFS= read -r number; do
   [[ -n "$number" ]] || continue
   pr=$(gh api "repos/$GH_REPO/pulls/$number")
-  jq -e --arg repo "$GH_REPO" --arg base "$RELEASE_BRANCH" '
+  jq -e --arg repo "$GH_REPO" --arg base "$RELEASE_BRANCH" --arg bot "$RELEASE_BOT_LOGIN" '
     .state == "open" and .draft == false and
-    .user.login == "github-actions[bot]" and
+    .user.login == $bot and
     .base.ref == $base and .head.repo.full_name == $repo and
     (.head.ref | startswith("release-please--branches--"))
   ' <<< "$pr" > /dev/null
@@ -35,8 +36,8 @@ while IFS= read -r number; do
       .filename == "version.txt" or
       .filename == ".release-please-manifest.json")' > /dev/null
 
-  # GITHUB_TOKEN-created PRs do not automatically execute PR workflows. Record their explicit
-  # exemption using the same two contexts required by branch protection.
+  # Record the verified release metadata exemption with the GitHub Actions token,
+  # matching the integration required by branch protection.
   for context in 'CI - gate' 'CI - release'; do
     gh api "repos/$GH_REPO/statuses/$sha" --method POST \
       -f state=success -f context="$context" \
