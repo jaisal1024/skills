@@ -1,4 +1,4 @@
 interface:
   display_name: "Code Review"
-  short_description: "Find actionable bugs and regressions in code changes"
-  default_prompt: "Use $code-review to review the requested changes and report actionable findings."
+  short_description: "Placeholder for a future code-review skill"
+  default_prompt: "Use $code-review once its review instructions have been defined."
