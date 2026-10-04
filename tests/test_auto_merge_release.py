@@ -31,7 +31,7 @@ elif args[:2] == ["pr", "merge"] and os.environ.get("MOCK_MERGE_FAIL"):
 
 class ReleaseAutomationTest(unittest.TestCase):
     def run_automation(self, *, author="skills-release[bot]", files=None,
-                       merged="true", merge_fail=False, new_prs='[{"number": 7}]'):
+                       merged="true", merge_fail=False, new_prs='[{"number": 7}]', branch="main"):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "gh").write_text(MOCK_GH)
@@ -39,11 +39,11 @@ class ReleaseAutomationTest(unittest.TestCase):
             (root / "sleep").write_text("#!/bin/sh\nexit 0\n")
             (root / "sleep").chmod(0o755)
             pr = {"number": 7, "labels": [{"name": "autorelease: pending"}], "state": "open", "draft": False, "user": {"login": author},
-                  "base": {"ref": "main"}, "title": "chore(main): release 0.1.0",
+                  "base": {"ref": branch}, "title": "chore(main): release 0.1.0",
                   "head": {"sha": "abc123", "ref": "release-please--branches--main",
                            "repo": {"full_name": "owner/skills"}}}
             env = {**os.environ, "PATH": str(root) + os.pathsep + os.environ["PATH"],
-                   "GH_REPO": "owner/skills", "RELEASE_BOT_LOGIN": "skills-release[bot]", "RELEASE_BRANCH": "main",
+                   "GH_REPO": "owner/skills", "RELEASE_BOT_LOGIN": "skills-release[bot]", "RELEASE_BRANCH": branch,
                    "RELEASE_PRS": new_prs, "MOCK_PR": json.dumps(pr),
                    "MOCK_FILES": json.dumps(files or [{"filename": "version.txt"}]),
                    "MOCK_MERGED": merged, "CALL_LOG": str(root / "calls")}
@@ -58,10 +58,17 @@ class ReleaseAutomationTest(unittest.TestCase):
         result, calls = self.run_automation()
         self.assertEqual(result.returncode, 0, result.stderr)
         statuses = [call for call in calls if call[:2] == ["api", "repos/owner/skills/statuses/abc123"]]
-        self.assertEqual(len(statuses), 2)
+        self.assertEqual(len(statuses), 1)
         merge = next(call for call in calls if call[:2] == ["pr", "merge"])
         self.assertEqual(merge[merge.index("--match-head-commit") + 1], "abc123")
         self.assertIn(["workflow", "run", "release-please.yml", "--repo", "owner/skills", "--ref", "main"], calls)
+
+    def test_release_branch_gets_both_required_exemptions(self):
+        result, calls = self.run_automation(branch="release/1.x")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        statuses = [call for call in calls if call[:2] == ["api", "repos/owner/skills/statuses/abc123"]]
+        self.assertEqual({call[call.index("-f", call.index("-f") + 1) + 1] for call in statuses},
+                         {"context=CI - gate", "context=CI - release"})
 
     def test_existing_pending_release_is_retried_without_new_action_output(self):
         result, calls = self.run_automation(new_prs="[]")

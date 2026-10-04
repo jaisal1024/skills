@@ -41,7 +41,7 @@ CI uses the same pinned version, treats warnings as failures, and reports GitHub
 
 ## Releases
 
-[release-please](https://github.com/googleapis/release-please-action) manages versions, the changelog, release PRs, and GitHub releases. All skills share a repository version. The required **CI - gate** and **CI - release** checks cover PR titles, skills, release configuration, and release automation. Squash merges use the PR title as the merge commit message. Generated release PRs merge automatically. See [RELEASING.md](RELEASING.md) for setup and the release workflow.
+[release-please](https://github.com/googleapis/release-please-action) manages versions, the changelog, release PRs, and GitHub releases. All skills share a repository version. **CI - gate** is required on `main` and `release/**` for PR titles and skills. **CI - release** is additionally required on `release/**`; it always reports a status and uses path filters to select release checks. Squash merges use the PR title as the merge commit message. Generated release PRs merge automatically. See [RELEASING.md](RELEASING.md) for setup and the release workflow.
 
 ## License
 

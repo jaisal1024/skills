@@ -31,8 +31,28 @@ jobs:
     name: CI - release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Select release checks
+        id: changes
+        if: startsWith(github.base_ref, 'release/')
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            release:
+              - '.github/workflows/**'
+              - 'release-please-config.json'
+              - '.release-please-manifest.json'
+              - 'version.txt'
+              - 'CHANGELOG.md'
+              - 'scripts/**'
+              - 'tests/**'
+              - 'skills/**'
+      - name: Release checks not applicable
+        if: steps.changes.outputs.release != 'true'
+        run: echo 'No release checks required for this PR target and changed paths.'
+      - if: steps.changes.outputs.release == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate release-please configuration against its schema
+        if: steps.changes.outputs.release == 'true'
         run: |
           curl --fail --silent --show-error --location \
             https://raw.githubusercontent.com/googleapis/release-please/v17.6.0/schemas/config.json \
@@ -40,6 +60,7 @@ jobs:
           npx --yes --package=ajv-cli@5.0.0 ajv validate --strict=false \
             -s "$RUNNER_TEMP/release-please-schema.json" -d release-please-config.json
       - name: Check release version consistency and automation syntax
+        if: steps.changes.outputs.release == 'true'
         run: |
           python3 - <<'PY'
           import json

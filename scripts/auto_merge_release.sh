@@ -38,7 +38,11 @@ while IFS= read -r number; do
 
   # Record the verified release metadata exemption with the GitHub Actions token,
   # matching the integration required by branch protection.
-  for context in 'CI - gate' 'CI - release'; do
+  contexts=('CI - gate')
+  if [[ "$RELEASE_BRANCH" == release/* ]]; then
+    contexts+=('CI - release')
+  fi
+  for context in "${contexts[@]}"; do
     gh api "repos/$GH_REPO/statuses/$sha" --method POST \
       -f state=success -f context="$context" \
       -f description='Exempt: verified release-please metadata PR' > /dev/null

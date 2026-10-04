@@ -6,10 +6,10 @@ All skills are released together using [release-please](https://github.com/googl
 
 Repository auto-merge is enabled and squash commits use PR titles. Release-please authenticates as a dedicated private GitHub App. The workflow uses `GITHUB_TOKEN` only for verified release-PR check exemptions, auto-merge, and publication dispatch; it does not create release PRs or version tags. The combined Actions setting for creating PRs and approving reviews can remain disabled.
 
-The branch ruleset protects `main` and `release/**` branches with squash-only pull requests, linear history, deletion and force-push protection, and these required GitHub Actions contexts:
+The shared branch ruleset protects `main` and `release/**` branches with squash-only pull requests, linear history, deletion and force-push protection, and requires **CI - gate**. A second ruleset requires **CI - release** on `release/**` only:
 
 - **CI - gate:** Aggregates successful PR-title and skill validation; a failed or skipped dependency fails the gate.
-- **CI - release:** Validates release-please configuration against the upstream schema, verifies version-file consistency, and tests the release automation.
+- **CI - release:** Always reports a status. Release checks execute only for PRs targeting `release/**` when `dorny/paths-filter` detects changes to skills, scripts, tests, workflows, release configuration, or version/changelog files. Other PRs report success without executing release tests. The checks validate release-please configuration against the upstream schema, verifies version-file consistency, and tests the release automation.
 
 PR-title validation checks only PR titles. Individual commits remain unrestricted. Use squash merging and preserve the validated PR title as the squash commit title. Existing administrator bypass permissions remain in the ruleset.
 
@@ -30,7 +30,7 @@ GitHub rulesets authorize app identities, not workflow files. Keep this app's pr
 
 The release workflow runs after pushes to `main` or `release/**`, and can be dispatched manually for either. Release-please creates the version/changelog PR for that target branch. The workflow then processes newly generated PRs and existing pending release PRs when retrying a run, verifies the bot author and same-repository release branch, and requires changes to be limited to `CHANGELOG.md`, `version.txt`, and `.release-please-manifest.json`.
 
-These generated release PRs are exempt from the normal PR checks. The workflow records successful exemption statuses for **CI - gate** and **CI - release**, then enables squash auto-merge for the inspected head SHA. No approval or manual merge is required. Unexpected files, conflicts, or other unmet merge requirements fail the automation instead of bypassing protection.
+These generated release PRs are exempt from the normal PR checks. The workflow records a successful exemption for **CI - gate**, plus **CI - release** when targeting `release/**`, then enables squash auto-merge for the inspected head SHA. No approval or manual merge is required. Unexpected files, conflicts, or other unmet merge requirements fail the automation instead of bypassing protection.
 
 App-created PRs can trigger normal PR CI. The merge uses `GITHUB_TOKEN`, which does not automatically trigger the push workflow. After confirming the release PR merged, the workflow explicitly dispatches publication on the same target branch. Release-please then publishes the version tag and GitHub release using its app token. See [GitHub's workflow triggering rules](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
 
