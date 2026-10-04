@@ -28,7 +28,7 @@ while IFS= read -r number; do
       .filename == "version.txt" or
       .filename == ".release-please-manifest.json")' > /dev/null
 
-  # GITHUB_TOKEN-created PRs do not trigger PR workflows. Record their explicit
+  # GITHUB_TOKEN-created PRs do not automatically execute PR workflows. Record their explicit
   # exemption using the same two contexts required by branch protection.
   for context in 'CI - gate' 'CI - release'; do
     gh api "repos/$GH_REPO/statuses/$sha" --method POST \
