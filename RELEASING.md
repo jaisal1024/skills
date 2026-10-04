@@ -15,7 +15,7 @@ PR-title validation checks only PR titles. Individual commits remain unrestricte
 
 ## Automatic release PRs
 
-The release workflow runs after pushes to `main` or `release/**`, and can be dispatched manually for either. Release-please creates the version/changelog PR for that target branch. The workflow then processes only PRs returned by that action, verifies the bot author and same-repository release branch, and requires changes to be limited to `CHANGELOG.md`, `version.txt`, and `.release-please-manifest.json`.
+The release workflow runs after pushes to `main` or `release/**`, and can be dispatched manually for either. Release-please creates the version/changelog PR for that target branch. The workflow then processes newly generated PRs and existing pending release PRs when retrying a run, verifies the bot author and same-repository release branch, and requires changes to be limited to `CHANGELOG.md`, `version.txt`, and `.release-please-manifest.json`.
 
 These generated release PRs are exempt from the normal PR checks. The workflow records successful exemption statuses for **CI - gate** and **CI - release**, then enables squash auto-merge for the inspected head SHA. No approval or manual merge is required. Unexpected files, conflicts, or other unmet merge requirements fail the automation instead of bypassing protection.
 

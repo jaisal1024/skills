@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Only process PRs returned by release-please in this trusted workflow run.
+# Process newly generated PRs and pending bot release PRs when retrying a run.
 : "${RELEASE_PRS:?release-please PR output is required}"
 : "${GH_REPO:?repository is required}"
 : "${RELEASE_BRANCH:?release branch is required}"
 
 jq -e 'type == "array" and all(.[]; (.number | type) == "number")' <<< "$RELEASE_PRS" > /dev/null
-numbers=$(jq -r '.[].number' <<< "$RELEASE_PRS")
+pending=$(gh api "repos/$GH_REPO/pulls" --method GET -f state=open \
+  -f base="$RELEASE_BRANCH" --paginate --slurp |
+  jq --arg repo "$GH_REPO" --arg base "$RELEASE_BRANCH" '[flatten[] |
+    select(.user.login == "github-actions[bot]" and .base.ref == $base and
+      .head.repo.full_name == $repo and
+      (.head.ref | startswith("release-please--branches--")) and
+      any(.labels[]; .name == "autorelease: pending")) | {number}]')
+numbers=$(jq -r --argjson pending "$pending" '. + $pending | unique_by(.number) | .[].number' <<< "$RELEASE_PRS")
 merged=false
 while IFS= read -r number; do
   [[ -n "$number" ]] || continue

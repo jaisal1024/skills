@@ -15,7 +15,9 @@ with open(os.environ["CALL_LOG"], "a") as log:
     log.write(json.dumps(args) + "\n")
 pr = json.loads(os.environ["MOCK_PR"])
 endpoint = next((arg for arg in args if arg.startswith("repos/")), "")
-if args[0] == "api" and endpoint.endswith("/files"):
+if args[0] == "api" and endpoint == "repos/owner/skills/pulls":
+    print(json.dumps([[pr]]))
+elif args[0] == "api" and endpoint.endswith("/files"):
     print(json.dumps([json.loads(os.environ["MOCK_FILES"])]))
 elif args[0] == "api" and "/pulls/" in endpoint:
     if "--jq" in args:
@@ -29,20 +31,20 @@ elif args[:2] == ["pr", "merge"] and os.environ.get("MOCK_MERGE_FAIL"):
 
 class ReleaseAutomationTest(unittest.TestCase):
     def run_automation(self, *, author="github-actions[bot]", files=None,
-                       merged="true", merge_fail=False):
+                       merged="true", merge_fail=False, new_prs='[{"number": 7}]'):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "gh").write_text(MOCK_GH)
             (root / "gh").chmod(0o755)
             (root / "sleep").write_text("#!/bin/sh\nexit 0\n")
             (root / "sleep").chmod(0o755)
-            pr = {"state": "open", "draft": False, "user": {"login": author},
+            pr = {"number": 7, "labels": [{"name": "autorelease: pending"}], "state": "open", "draft": False, "user": {"login": author},
                   "base": {"ref": "main"}, "title": "chore(main): release 0.1.0",
                   "head": {"sha": "abc123", "ref": "release-please--branches--main",
                            "repo": {"full_name": "owner/skills"}}}
             env = {**os.environ, "PATH": str(root) + os.pathsep + os.environ["PATH"],
                    "GH_REPO": "owner/skills", "RELEASE_BRANCH": "main",
-                   "RELEASE_PRS": '[{"number": 7}]', "MOCK_PR": json.dumps(pr),
+                   "RELEASE_PRS": new_prs, "MOCK_PR": json.dumps(pr),
                    "MOCK_FILES": json.dumps(files or [{"filename": "version.txt"}]),
                    "MOCK_MERGED": merged, "CALL_LOG": str(root / "calls")}
             if merge_fail:
@@ -60,6 +62,12 @@ class ReleaseAutomationTest(unittest.TestCase):
         merge = next(call for call in calls if call[:2] == ["pr", "merge"])
         self.assertEqual(merge[merge.index("--match-head-commit") + 1], "abc123")
         self.assertIn(["workflow", "run", "release-please.yml", "--repo", "owner/skills", "--ref", "main"], calls)
+
+    def test_existing_pending_release_is_retried_without_new_action_output(self):
+        result, calls = self.run_automation(new_prs="[]")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(any(call[:2] == ["pr", "merge"] for call in calls))
+        self.assertTrue(any(call[:2] == ["workflow", "run"] for call in calls))
 
     def test_human_pr_cannot_receive_exemptions(self):
         result, calls = self.run_automation(author="someone")

@@ -35,10 +35,9 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
       - name: Auto-merge generated release PRs and dispatch publication
-        if: steps.release.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           RELEASE_BRANCH: ${{ github.ref_name }}
-          RELEASE_PRS: ${{ steps.release.outputs.prs }}
+          RELEASE_PRS: ${{ steps.release.outputs.prs || '[]' }}
         run: bash scripts/auto_merge_release.sh
