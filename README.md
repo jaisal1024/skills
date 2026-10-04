@@ -7,6 +7,9 @@ Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions
 | Skill | Purpose | Status |
 | --- | --- | --- |
 | [code-review](skills/code-review/SKILL.md) | Reserved for the future code-review workflow. | Placeholder; no review instructions yet. |
+| [setup-project-skills](skills/setup-project-skills/SKILL.md) | Document a codebase's runtime, QA features, and review conventions for installed skills. | Ready. |
+| [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
+| [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
 
 ## Use a skill
 
@@ -23,6 +26,44 @@ For example, copying `skills/code-review/` into a target project's `.agents/skil
 Once a skill has instructions, invoke it by name: `$code-review` in Codex, or `/code-review` in Claude Code and Cursor. Natural-language requests can also select a skill through its description.
 
 The shared instructions live in `SKILL.md`. Optional `agents/openai.yaml` metadata is specific to Codex; keep the actual workflow independent of it. Add scripts, references, or assets only when needed.
+
+### Configure a codebase
+
+Install `setup-project-skills` alongside the skills you want to use. In the
+target codebase, ask an agent:
+
+```text
+Use $setup-project-skills to configure address-feedback and exploratory-qa for
+this repository. Discover the supported app startup, synthetic test accounts,
+validation commands, and user features. Document QA journeys and distinguish
+code-discovered features from behavior actually verified in the app.
+```
+
+The setup produces shared Markdown documentation at the target repository root:
+
+```text
+.agents/project-context/
+  runtime.md    # App setup, ownership, synthetic access, and validation
+  qa-map.md     # Feature inventory, journeys, evidence, and discovery gaps
+  feedback.md   # Optional review-host and project-specific review conventions
+```
+
+This location stays the same for Codex, Claude Code, and Cursor installations.
+Keep these files in the codebase and version them when appropriate; they contain
+project knowledge, not secrets. Keeping them outside installed skill folders
+preserves customization when replacing skills with newer versions. Existing
+project docs remain authoritative and can be linked instead of duplicated.
+
+Setup is optional for a focused task: each skill can discover the details it
+needs directly. Setup makes that discovery reusable, and a later setup request
+can refresh one app or stale section. It does not require exercising every
+feature or treat an unrun command as verified. Missing facts and coverage remain
+explicit rather than blocking unrelated work.
+
+The QA capture helpers optionally use the target project's installed
+`@playwright/test` or `playwright`; browser tools can be used without those
+helpers. Authentication uses the target app's real UI. Evidence stays local
+unless sharing is authorized and a supported destination is available.
 
 See the official [Codex skill locations](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills), [Claude Code skills](https://code.claude.com/docs/en/skills), and [Cursor skill directories](https://cursor.com/docs/skills#skill-directories) for discovery and invocation details. Install paths above cover local use; cloud and remote environments may need their own setup.
 

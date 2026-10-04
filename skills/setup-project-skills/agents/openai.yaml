@@ -1,0 +1,4 @@
+interface:
+  display_name: "Set Up Project Skills"
+  short_description: "Document app setup and QA context for a codebase"
+  default_prompt: "Use $setup-project-skills to configure the installed feedback and QA skills for this codebase."
