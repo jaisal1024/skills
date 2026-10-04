@@ -4,17 +4,28 @@ All skills are released together using [release-please](https://github.com/googl
 
 ## GitHub setup
 
-Enable GitHub Actions and enable **Allow GitHub Actions to create and approve pull requests** under Settings → Actions → General. The workflow uses the repository's built-in `GITHUB_TOKEN`; no extra secret is needed for basic releases.
+Repository auto-merge is enabled and squash commits use PR titles. Release-please needs **Allow GitHub Actions to create and approve pull requests** enabled under Settings → Actions → General. GitHub combines those permissions in one setting; the automation does not submit review approvals. The release workflow uses `GITHUB_TOKEN`; no release-token secret is needed.
 
-Under Settings → General → Pull Requests, enable squash merging and choose **Pull request title** as the default squash commit title. Use squash merging so the validated PR title becomes the commit message release-please reads on `main`. Make **Validate PR title** a required status check in the branch rules to enforce the title format before merging.
+The branch ruleset protects `main` and `release/**` branches with squash-only pull requests, linear history, deletion and force-push protection, and these required GitHub Actions contexts:
 
-The release and skill validation workflows target `main`. If the default branch changes, update their branch filters and the release-please target branch.
+- **CI - gate:** Aggregates successful PR-title and skill validation; a failed or skipped dependency fails the gate.
+- **CI - release:** Validates release-please configuration against the upstream schema, verifies version-file consistency, and tests the release automation.
 
-GitHub does not automatically trigger other workflows for PRs or tags created using `GITHUB_TOKEN`. Before merging a release PR, run the **Validate skills** workflow manually with that PR's head branch selected and confirm it succeeds. If branch protection requires automatic PR checks, including **Validate PR title**, configure a suitably scoped GitHub App token or a `RELEASE_PLEASE_TOKEN` secret; the release workflow prefers that secret when present. See the [upstream token guidance](https://github.com/googleapis/release-please-action#other-actions-on-release-please-prs).
+PR-title validation checks only PR titles. Individual commits remain unrestricted. Use squash merging and preserve the validated PR title as the squash commit title. Existing administrator bypass permissions remain in the ruleset.
+
+## Automatic release PRs
+
+The release workflow runs after pushes to `main` or `release/**`, and can be dispatched manually for either. Release-please creates the version/changelog PR for that target branch. The workflow then processes only PRs returned by that action, verifies the bot author and same-repository release branch, and requires changes to be limited to `CHANGELOG.md`, `version.txt`, and `.release-please-manifest.json`.
+
+These generated release PRs are exempt from the normal PR checks. The workflow records successful exemption statuses for **CI - gate** and **CI - release**, then enables squash auto-merge for the inspected head SHA. No approval or manual merge is required. Unexpected files, conflicts, or other unmet merge requirements fail the automation instead of bypassing protection.
+
+GitHub does not automatically execute normal PR CI or push workflows for these `GITHUB_TOKEN` operations. After confirming the release PR merged, the workflow explicitly dispatches publication on the same target branch. This publishes the version tag and GitHub release without requiring a PAT. See [GitHub's workflow triggering rules](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
+
+If a release run fails, inspect the error and rerun it after correcting the cause. The script waits up to 60 seconds for the merge; if it remains pending, auto-merge stays enabled and the run fails visibly. If it merges later, manually dispatch **Release please** on its target branch to publish that release.
 
 ## PR title conventions
 
-Use Conventional Commit syntax for PR titles. The **Validate PR title** workflow runs on PR creation, reopening, title edits, new pushes, and marking a draft ready for review. It checks only the current PR title; individual commit messages are not checked, including single-commit PRs. The action is pinned to a full commit SHA.
+Use Conventional Commit syntax for PR titles. The **CI** workflow runs on PR creation, reopening, title edits, new pushes, and marking a draft ready for review. It checks only the current PR title; individual commit messages are not checked, including single-commit PRs. The action is pinned to a full commit SHA.
 
 | PR title | Meaning | Version change |
 | --- | --- | --- |
@@ -29,8 +40,8 @@ Use `!` in the title to mark a breaking change, and explain the migration in the
 
 1. Squash merge reviewed PRs into `main` using their validated titles. CI checks the title and skill structure, and the release workflow validates skills again before calling release-please.
 2. Release-please opens or updates a release PR with `CHANGELOG.md`, `version.txt`, and `.release-please-manifest.json` changes.
-3. Review the proposed version, notes, and accumulated changes. Try changed skills on representative tasks and validate the release PR as described above.
-4. Merge the release PR when ready. The next release workflow run creates the version tag and publishes the GitHub release.
+3. The workflow verifies that it is a generated metadata-only release PR, records the check exemptions, and squash merges it automatically.
+4. The workflow dispatches a follow-up publication run to create the version tag and GitHub release.
 5. Check the release notes and download GitHub's source archive. Install a skill from its `skills/<name>/` folder using the README instructions. The archive includes the license and supporting files.
 
-Do not manually bump the version files or maintain duplicate release notes. Never move a published tag; fix a released issue in a new version. Release publication is the consequence of merging the release PR; creating this scaffold does not itself publish anything.
+Do not manually bump the version files or maintain duplicate release notes. Never move a published tag; fix a released issue in a new version. Merging a normal PR with release-worthy changes starts this automatic release cycle; creating this scaffold does not itself publish anything.

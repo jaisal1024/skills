@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, "release/**"]
+    types: [opened, reopened, edited, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  title:
+    uses: ./.github/workflows/pr-title.yml
+  skills:
+    uses: ./.github/workflows/validate.yml
+  gate:
+    name: CI - gate
+    if: always()
+    needs: [title, skills]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require successful title and skill checks
+        env:
+          TITLE_RESULT: ${{ needs.title.result }}
+          SKILLS_RESULT: ${{ needs.skills.result }}
+        run: |
+          test "$TITLE_RESULT" = success
+          test "$SKILLS_RESULT" = success
+  release:
+    name: CI - release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate release-please configuration against its schema
+        run: |
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/googleapis/release-please/v17.6.0/schemas/config.json \
+            --output "$RUNNER_TEMP/release-please-schema.json"
+          npx --yes --package=ajv-cli@5.0.0 ajv validate --strict=false \
+            -s "$RUNNER_TEMP/release-please-schema.json" -d release-please-config.json
+      - name: Check release version consistency and automation syntax
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('.release-please-manifest.json').read_text())
+          version = Path('version.txt').read_text().strip()
+          assert manifest == {'.': version}, 'Manifest and version.txt must match'
+          PY
+          bash -n scripts/auto_merge_release.sh
+          python3 -m unittest discover -s tests

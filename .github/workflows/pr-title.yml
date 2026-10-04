@@ -1,8 +1,7 @@
 name: Validate PR title
 
 on:
-  pull_request:
-    types: [opened, reopened, edited, synchronize, ready_for_review]
+  workflow_call:
 
 permissions:
   pull-requests: read
