@@ -41,7 +41,7 @@ CI uses the same pinned version, treats warnings as failures, and reports GitHub
 
 ## Releases
 
-[release-please](https://github.com/googleapis/release-please-action) manages versions, the changelog, release PRs, and GitHub releases. All skills share a repository version. Use Conventional Commit messages, including for squash merges. See [RELEASING.md](RELEASING.md) for setup and the release workflow.
+[release-please](https://github.com/googleapis/release-please-action) manages versions, the changelog, release PRs, and GitHub releases. All skills share a repository version. CI validates Conventional Commit PR titles; squash merges use the title as the merge commit message. See [RELEASING.md](RELEASING.md) for setup and the release workflow.
 
 ## License
 
