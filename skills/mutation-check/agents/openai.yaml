@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mutation Check"
+  short_description: "Break each change on purpose and prove the tests notice"
+  default_prompt: "Use $mutation-check to prove the tests on this branch catch a regression of each change."
