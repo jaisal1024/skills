@@ -10,6 +10,7 @@ Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions
 | [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
 | [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
 | [durable-comments](skills/durable-comments/SKILL.md) | Write source comments that keep reasons and constraints, not narration; optional Claude Code hook caps comment length. | Ready. |
+| [mutation-check](skills/mutation-check/SKILL.md) | Break each behavior of a change on purpose and prove the tests notice, at any test layer. | Ready. |
 
 ## Use a skill
 
