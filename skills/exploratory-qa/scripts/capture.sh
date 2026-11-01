@@ -65,6 +65,7 @@ abspath() { case "$1" in /*) printf '%s' "$1" ;; *) printf '%s' "$PWD/$1" ;; esa
 
 mkdir -p "$(dirname "$OUTPUT")"
 OUTPUT="$(abspath "$OUTPUT")"
+rm -f "$OUTPUT"
 [[ -z "$STORAGE_STATE" ]] || STORAGE_STATE="$(abspath "$STORAGE_STATE")"
 
 # Default to the caller's dependency workspace, including non-Git projects.
@@ -95,6 +96,8 @@ node -e '
   const { chromium, devices } = require(packagePath);
   const env = process.env;
   const timeout = Number(env.CAP_TIMEOUT_MS);
+  // Short on purpose: every non-Next page pays this before the shot.
+  const HYDRATION_TIMEOUT_MS = Math.min(timeout, 5000);
 
   (async () => {
     const options = {};
@@ -111,18 +114,61 @@ node -e '
     const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH || undefined });
     try {
       const page = await (await browser.newContext(options)).newPage();
-      // Not networkidle: a surface holding a stream or websocket open never
-      // reaches it, so goto would burn the whole timeout. --wait and the
-      // element visibility check below cover settling.
       page.setDefaultTimeout(timeout);
       const response = await page.goto(env.CAP_URL, { waitUntil: "domcontentloaded", timeout });
       if (response && !response.ok()) throw new Error(`page returned HTTP ${response.status()}`);
+
+      // Next attaches this once React hydrates; waiting avoids a pre-hydration
+      // shot. Gated on a Next page, which would otherwise stall for the timeout.
+      if (await page.locator("script[src*=\"/_next/\"]").count()) {
+        await page
+          .locator("next-route-announcer")
+          .waitFor({ state: "attached", timeout: HYDRATION_TIMEOUT_MS })
+          .catch(() => {});
+      }
+
+      // Capped: a page that streams or polls never goes idle.
+      await page
+        .waitForLoadState("networkidle", { timeout: Math.min(timeout, 10000) })
+        .catch(() => {});
 
       if (Number(env.CAP_WAIT_MS) > 0) await page.waitForTimeout(Number(env.CAP_WAIT_MS));
 
       if (env.CAP_SELECTOR) {
         const element = page.locator(env.CAP_SELECTOR).first();
         await element.waitFor({ state: "visible", timeout });
+
+        // A scroll area clips an element taller than its visible part. Grow the
+        // viewport, at the same width so the layout holds, until the element fits.
+        const viewport = page.viewportSize();
+        const box = await element.boundingBox();
+        const needed = box ? Math.ceil(box.height + 400) : 0;
+        if (viewport && needed > viewport.height) {
+          await page.setViewportSize({ width: viewport.width, height: needed });
+        }
+        await element.scrollIntoViewIfNeeded({ timeout });
+
+        // A crop shows whatever paints over the element, such as a sticky
+        // header or composer. Hide each positioned layer that covers it.
+        await element.evaluate((target) => {
+          const box = target.getBoundingClientRect();
+          const overlays = new Set();
+          for (let fx = 0.02; fx < 1; fx += 0.12) {
+            for (let fy = 0.01; fy < 1; fy += 0.07) {
+              const x = box.left + box.width * fx;
+              const y = box.top + box.height * fy;
+              if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
+              const hit = document.elementFromPoint(x, y);
+              if (!hit || target.contains(hit)) continue;
+              let overlay = null;
+              for (let n = hit; n && !n.contains(target); n = n.parentElement) {
+                if (["absolute", "fixed", "sticky"].includes(getComputedStyle(n).position)) overlay = n;
+              }
+              if (overlay) overlays.add(overlay);
+            }
+          }
+          for (const n of overlays) n.style.visibility = "hidden";
+        });
         // Playwright crops in the page it just rendered, so a device scale
         // factor above 1 needs no conversion here.
         await element.screenshot({ path: env.CAP_OUTPUT, timeout });
