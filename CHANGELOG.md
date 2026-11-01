@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/jaisal1024/skills/compare/v1.2.0...v1.3.0) (2026-11-01)
+
+
+### Features
+
+* add mutation-check skill ([#8](https://github.com/jaisal1024/skills/issues/8)) ([da2088d](https://github.com/jaisal1024/skills/commit/da2088d5afd3d0d7106c0be2fbee9950fbd9c0db))
+
 ## [1.2.0](https://github.com/jaisal1024/skills/compare/v1.1.0...v1.2.0) (2026-11-01)
 
 
