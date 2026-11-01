@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Style Update"
+  short_description: "Refresh your private review-style examples from recent reviews"
+  default_prompt: "Use $review-style-update to update my review style from my reviews since the last sync."
