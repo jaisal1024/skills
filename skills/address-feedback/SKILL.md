@@ -6,12 +6,8 @@ description: Address actionable PR or merge-request review feedback using the cu
 # Address review feedback
 
 Keep fixes focused on the review's intent and the user's scope. Read applicable
-repository instructions and, when present, the target repository's
-`.agents/project-context/feedback.md` and `runtime.md`. These files are shared
-project knowledge, not part of the installed skill. Verify relevant facts against
-the checkout. If absent, discover the needed conventions from repository docs
-and CI; setup is not a prerequisite for a focused fix. Use `setup-project-skills`
-when available and the user requests durable project configuration.
+repository instructions, and discover the needed conventions from repository docs
+and CI. Verify relevant facts against the checkout.
 
 ## Find actionable feedback
 
