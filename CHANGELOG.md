@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/jaisal1024/skills/compare/v1.1.0...v1.2.0) (2026-11-01)
+
+
+### Features
+
+* add durable-comments skill and Claude Code comment-limit hook ([#6](https://github.com/jaisal1024/skills/issues/6)) ([081a95e](https://github.com/jaisal1024/skills/commit/081a95e54aa26856abf57e91f12ec6657c5a8da5))
+
 ## [1.1.0](https://github.com/jaisal1024/skills/compare/v1.0.0...v1.1.0) (2026-10-05)
 
 
