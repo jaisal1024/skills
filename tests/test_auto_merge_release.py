@@ -87,7 +87,7 @@ class ReleaseAutomationTest(unittest.TestCase):
         self.assertFalse(any("/statuses/" in " ".join(call) for call in calls))
 
     def test_code_changes_cannot_receive_exemptions(self):
-        result, calls = self.run_automation(files=[{"filename": "skills/code-review/SKILL.md"}])
+        result, calls = self.run_automation(files=[{"filename": "skills/durable-comments/SKILL.md"}])
         self.assertNotEqual(result.returncode, 0)
         self.assertFalse(any("/statuses/" in " ".join(call) for call in calls))
 

@@ -42,8 +42,8 @@ Use Conventional Commit syntax for PR titles. The **CI** workflow runs on PR cre
 
 | PR title | Meaning | Version change |
 | --- | --- | --- |
-| `feat(code-review): add review guidance` | New skill or behavior | Minor |
-| `fix(code-review): correct severity guidance` | Bug fix | Patch |
+| `feat(durable-comments): add hook options` | New skill or behavior | Minor |
+| `fix(durable-comments): correct comment examples` | Bug fix | Patch |
 | `feat!: change the review output format` | Breaking change; explain migration in the body | Minor before 1.0; major afterward |
 | `docs: clarify installation` / `chore: update tooling` | Maintenance | Does not independently trigger a release |
 
