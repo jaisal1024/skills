@@ -125,9 +125,10 @@ can refresh one app or stale section. It does not require exercising every
 feature or treat an unrun command as verified. Missing facts and coverage remain
 explicit rather than blocking unrelated work.
 
-The QA capture helpers optionally use the target project's installed
-`@playwright/test` or `playwright`; browser tools can be used without those
-helpers. Authentication uses the target app's real UI. Evidence stays local
+The QA capture helper optionally uses the target project's installed
+`@playwright/test` or `playwright`, and `playwright-cli` drives interactive
+passes when available; browser tools can be used without either. Converting a
+recording to MP4 needs `ffmpeg` and Node.js. Authentication uses the target app's real UI. Evidence stays local
 unless sharing is authorized and a supported destination is available.
 
 See the official [Codex skill locations](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills), [Claude Code skills](https://code.claude.com/docs/en/skills), and [Cursor skill directories](https://cursor.com/docs/skills#skill-directories) for discovery and invocation details. Install paths above cover local use; cloud and remote environments may need their own setup.
