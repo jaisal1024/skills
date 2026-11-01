@@ -27,35 +27,35 @@ Run installation commands from the project where you want the skill available. C
 ### Codex
 
 ```sh
-npx -y skills add jaisal1024/skills --skill durable-comments --agent codex --yes
+npx -y skills add jaisal1024/skills --skill exploratory-qa --agent codex --yes
 ```
 
-Invoke it with `$durable-comments`.
+Invoke it with `$exploratory-qa`.
 
 ### Claude Code
 
 ```sh
-npx -y skills add jaisal1024/skills --skill durable-comments --agent claude-code --yes
+npx -y skills add jaisal1024/skills --skill exploratory-qa --agent claude-code --yes
 ```
 
-Invoke it with `/durable-comments`.
+Invoke it with `/exploratory-qa`.
 
 ### Cursor
 
 ```sh
-npx -y skills add jaisal1024/skills --skill durable-comments --agent cursor --yes
+npx -y skills add jaisal1024/skills --skill exploratory-qa --agent cursor --yes
 ```
 
-Ask Cursor to use the `durable-comments` skill.
+Ask Cursor to use the `exploratory-qa` skill.
 
 ### Ask your agent to install
 
 Copy this prompt into Codex, Claude Code, or Cursor:
 
 ```text
-Install the durable-comments skill from jaisal1024/skills into the current
+Install the exploratory-qa skill from jaisal1024/skills into the current
 project for the agent I am using. Check for existing local skill changes first
-and preserve them. Use the Skills CLI with --skill durable-comments and the
+and preserve them. Use the Skills CLI with --skill exploratory-qa and the
 matching --agent value (codex, claude-code, or cursor). After installation,
 confirm that the agent's skill directory contains a readable SKILL.md.
 ```
@@ -73,7 +73,7 @@ npx -y skills check
 npx -y skills update
 ```
 
-Add `--global` to an installation command to make the skill available across projects for that agent. Replace `durable-comments` with any skill name from the table above. Share this README or the appropriate installation command with users; private repositories require their own GitHub access. Review local changes before updating installed skills.
+Add `--global` to an installation command to make the skill available across projects for that agent. Replace `exploratory-qa` with any skill name from the table above. Share this README or the appropriate installation command with users; private repositories require their own GitHub access. Review local changes before updating installed skills.
 
 ### Manual installation
 
@@ -85,9 +85,9 @@ Skills use the shared `SKILL.md` format. You can also copy a skill's entire fold
 | Claude Code | `.claude/skills/<skill-name>/` | `~/.claude/skills/<skill-name>/` |
 | Cursor | `.agents/skills/<skill-name>/` or `.cursor/skills/<skill-name>/` | `~/.agents/skills/<skill-name>/` or `~/.cursor/skills/<skill-name>/` |
 
-For example, copying `skills/durable-comments/` into a target project's `.agents/skills/` makes that folder available to Codex and Cursor. Claude Code uses its `.claude/skills/` location.
+For example, copying `skills/exploratory-qa/` into a target project's `.agents/skills/` makes that folder available to Codex and Cursor. Claude Code uses its `.claude/skills/` location.
 
-Invoke a skill by name: `$durable-comments` in Codex, or `/durable-comments` in Claude Code and Cursor. Natural-language requests can also select a skill through its description.
+Invoke a skill by name: `$exploratory-qa` in Codex, or `/exploratory-qa` in Claude Code and Cursor. Natural-language requests can also select a skill through its description.
 
 The shared instructions live in `SKILL.md`. Optional `agents/openai.yaml` metadata is specific to Codex; keep the actual workflow independent of it. Add scripts, references, or assets only when needed.
 
