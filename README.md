@@ -1,14 +1,14 @@
 # Skills
 
-Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions that capture how I want recurring work done. This repository is where I develop, review, and release them.
+My agent skills that I hold near and dear to my heart.
 
 ## Skills
 
 | Skill | Purpose | Status |
 | --- | --- | --- |
+| [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
 | [setup-exploratory-qa](skills/setup-exploratory-qa/SKILL.md) | Write project-specific QA scripts and a user-confirmed feature map for exploratory-qa. | Ready. |
 | [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
-| [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
 | [durable-comments](skills/durable-comments/SKILL.md) | Write source comments that keep reasons and constraints, not narration; optional Claude Code hook caps comment length. | Ready. |
 | [mutation-check](skills/mutation-check/SKILL.md) | Break each behavior of a change on purpose and prove the tests notice, at any test layer. | Ready. |
 | [review-style](skills/review-style/SKILL.md) | Review a PR with my rules and voice by code area, then stage approved comments as a pending GitHub review. | Ready. |
