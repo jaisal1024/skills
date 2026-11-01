@@ -6,7 +6,6 @@ Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions
 
 | Skill | Purpose | Status |
 | --- | --- | --- |
-| [code-review](skills/code-review/SKILL.md) | Reserved for the future code-review workflow. | Placeholder; no review instructions yet. |
 | [setup-project-skills](skills/setup-project-skills/SKILL.md) | Document a codebase's runtime, QA features, and review conventions for installed skills. | Ready. |
 | [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
 | [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
@@ -21,45 +20,44 @@ Install directly from GitHub with [the Skills CLI](https://github.com/vercel-lab
 [![Install for Cursor](https://img.shields.io/badge/Install_for-Cursor-2563EB?style=for-the-badge)](#cursor)
 [![Ask your agent](https://img.shields.io/badge/Ask_your_agent-to_install-15803D?style=for-the-badge)](#ask-your-agent-to-install)
 
-Click a button to open its instructions, then copy the command into your terminal or the prompt into your agent. README buttons do not execute commands. The `code-review` skill is currently a placeholder; installing it does not provide a working review workflow yet.
+Click a button to open its instructions, then copy the command into your terminal or the prompt into your agent. README buttons do not execute commands.
 
 Run installation commands from the project where you want the skill available. Check existing local skill changes before installing. The examples select one skill and agent explicitly and skip installation prompts.
 
 ### Codex
 
 ```sh
-npx -y skills add jaisal1024/skills --skill code-review --agent codex --yes
+npx -y skills add jaisal1024/skills --skill durable-comments --agent codex --yes
 ```
 
-Once the skill has instructions, invoke it with `$code-review`.
+Invoke it with `$durable-comments`.
 
 ### Claude Code
 
 ```sh
-npx -y skills add jaisal1024/skills --skill code-review --agent claude-code --yes
+npx -y skills add jaisal1024/skills --skill durable-comments --agent claude-code --yes
 ```
 
-Once the skill has instructions, invoke it with `/code-review`.
+Invoke it with `/durable-comments`.
 
 ### Cursor
 
 ```sh
-npx -y skills add jaisal1024/skills --skill code-review --agent cursor --yes
+npx -y skills add jaisal1024/skills --skill durable-comments --agent cursor --yes
 ```
 
-Once the skill has instructions, ask Cursor to use the `code-review` skill.
+Ask Cursor to use the `durable-comments` skill.
 
 ### Ask your agent to install
 
 Copy this prompt into Codex, Claude Code, or Cursor:
 
 ```text
-Install the code-review skill from jaisal1024/skills into the current project
-for the agent I am using. Check for existing local skill changes first and
-preserve them. Use the Skills CLI with --skill code-review and the matching
---agent value (codex, claude-code, or cursor). After installation, confirm
-that the agent's skill directory contains a readable SKILL.md. This skill
-is currently a placeholder; report that limitation.
+Install the durable-comments skill from jaisal1024/skills into the current
+project for the agent I am using. Check for existing local skill changes first
+and preserve them. Use the Skills CLI with --skill durable-comments and the
+matching --agent value (codex, claude-code, or cursor). After installation,
+confirm that the agent's skill directory contains a readable SKILL.md.
 ```
 
 ### Discover, share, and update
@@ -75,7 +73,7 @@ npx -y skills check
 npx -y skills update
 ```
 
-Add `--global` to an installation command to make the skill available across projects for that agent. Replace `code-review` with another skill name as this catalog grows. Share this README or the appropriate installation command with users; private repositories require their own GitHub access. Review local changes before updating installed skills.
+Add `--global` to an installation command to make the skill available across projects for that agent. Replace `durable-comments` with any skill name from the table above. Share this README or the appropriate installation command with users; private repositories require their own GitHub access. Review local changes before updating installed skills.
 
 ### Manual installation
 
@@ -87,9 +85,9 @@ Skills use the shared `SKILL.md` format. You can also copy a skill's entire fold
 | Claude Code | `.claude/skills/<skill-name>/` | `~/.claude/skills/<skill-name>/` |
 | Cursor | `.agents/skills/<skill-name>/` or `.cursor/skills/<skill-name>/` | `~/.agents/skills/<skill-name>/` or `~/.cursor/skills/<skill-name>/` |
 
-For example, copying `skills/code-review/` into a target project's `.agents/skills/` makes that folder available to Codex and Cursor. Claude Code uses its `.claude/skills/` location. The code-review skill is currently only a placeholder.
+For example, copying `skills/durable-comments/` into a target project's `.agents/skills/` makes that folder available to Codex and Cursor. Claude Code uses its `.claude/skills/` location.
 
-Once a skill has instructions, invoke it by name: `$code-review` in Codex, or `/code-review` in Claude Code and Cursor. Natural-language requests can also select a skill through its description.
+Invoke a skill by name: `$durable-comments` in Codex, or `/durable-comments` in Claude Code and Cursor. Natural-language requests can also select a skill through its description.
 
 The shared instructions live in `SKILL.md`. Optional `agents/openai.yaml` metadata is specific to Codex; keep the actual workflow independent of it. Add scripts, references, or assets only when needed.
 
