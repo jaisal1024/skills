@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/jaisal1024/skills/compare/v1.4.0...v1.5.0) (2026-11-01)
+
+
+### Features
+
+* add review-style and review-style-update skills ([#12](https://github.com/jaisal1024/skills/issues/12)) ([1bf40b1](https://github.com/jaisal1024/skills/commit/1bf40b1485e85b2eed74608e87e54c385ca7c296))
+
 ## [1.4.0](https://github.com/jaisal1024/skills/compare/v1.3.0...v1.4.0) (2026-11-01)
 
 
