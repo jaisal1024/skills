@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Style"
+  short_description: "Review a PR with your rules and voice, then stage a pending review"
+  default_prompt: "Use $review-style to review this pull request and draft comments for my approval."
