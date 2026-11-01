@@ -18,10 +18,9 @@ the code under test on purpose, one change at a time, and records which tests no
 
 ## Load project context
 
-Read applicable repository instructions and, when present, the target repository's
-`.agents/project-context/runtime.md` for test layers and commands. Verify commands against the
-checkout. If absent, find the test commands in package manifests, CI workflows, and testing
-docs. Follow the repository's own testing standards; this skill adds a workflow only.
+Read applicable repository instructions. Find the test commands in package manifests, CI
+workflows, and testing docs, and verify them against the checkout. Follow the repository's own
+testing standards; this skill adds a workflow only.
 
 ## Workflow
 

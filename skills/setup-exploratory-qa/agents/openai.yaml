@@ -1,0 +1,4 @@
+interface:
+  display_name: "Set Up Exploratory QA"
+  short_description: "Write QA scripts and a feature map for exploratory-qa"
+  default_prompt: "Use $setup-exploratory-qa to write the exploratory-qa scripts and feature map for this codebase."

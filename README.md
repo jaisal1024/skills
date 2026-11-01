@@ -1,14 +1,14 @@
 # Skills
 
-Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions that capture how I want recurring work done. This repository is where I develop, review, and release them.
+My agent skills that I hold near and dear to my heart.
 
 ## Skills
 
 | Skill | Purpose | Status |
 | --- | --- | --- |
-| [setup-project-skills](skills/setup-project-skills/SKILL.md) | Document a codebase's runtime, QA features, and review conventions for installed skills. | Ready. |
-| [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
 | [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
+| [setup-exploratory-qa](skills/setup-exploratory-qa/SKILL.md) | Write project-specific QA scripts and a user-confirmed feature map for exploratory-qa. | Ready. |
+| [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
 | [durable-comments](skills/durable-comments/SKILL.md) | Write source comments that keep reasons and constraints, not narration; optional Claude Code hook caps comment length. | Ready. |
 | [mutation-check](skills/mutation-check/SKILL.md) | Break each behavior of a change on purpose and prove the tests notice, at any test layer. | Ready. |
 | [review-style](skills/review-style/SKILL.md) | Review a PR with my rules and voice by code area, then stage approved comments as a pending GitHub review. | Ready. |
@@ -96,36 +96,27 @@ The shared instructions live in `SKILL.md`. Optional `agents/openai.yaml` metada
 
 ### Configure a codebase
 
-Install `setup-project-skills` alongside the skills you want to use. In the
-target codebase, ask an agent:
+Install `setup-exploratory-qa` alongside `exploratory-qa`. In the target codebase, ask an
+agent:
 
 ```text
-Use $setup-project-skills to configure address-feedback and exploratory-qa for
-this repository. Discover the supported app startup, synthetic test accounts,
-validation commands, and user features. Document QA journeys and distinguish
-code-discovered features from behavior actually verified in the app.
+Use $setup-exploratory-qa to set up exploratory-qa for this repository.
 ```
 
-The setup produces shared Markdown documentation at the target repository root:
+The setup writes two things at the target repository root, and asks you which features to
+map instead of guessing them from the code:
 
 ```text
 .agents/project-context/
-  runtime.md    # App setup, ownership, synthetic access, and validation
-  qa-map.md     # Feature inventory, journeys, evidence, and discovery gaps
-  feedback.md   # Optional review-host and project-specific review conventions
+  qa-scripts/   # Start the app, sign in synthetic accounts, and other repository-specific QA steps
+  qa-map.md     # Features and journeys you confirmed, execution evidence, and open questions
 ```
 
-This location stays the same for Codex, Claude Code, and Cursor installations.
-Keep these files in the codebase and version them when appropriate; they contain
-project knowledge, not secrets. Keeping them outside installed skill folders
-preserves customization when replacing skills with newer versions. Existing
-project docs remain authoritative and can be linked instead of duplicated.
+This location stays the same for Codex, Claude Code, and Cursor installations. Keep these
+files in the codebase; they contain project knowledge, not secrets. Keeping them outside
+installed skill folders preserves them when you update a skill.
 
-Setup is optional for a focused task: each skill can discover the details it
-needs directly. Setup makes that discovery reusable, and a later setup request
-can refresh one app or stale section. It does not require exercising every
-feature or treat an unrun command as verified. Missing facts and coverage remain
-explicit rather than blocking unrelated work.
+Setup is optional: `exploratory-qa` can discover what a focused pass needs directly.
 
 The QA capture helper optionally uses the target project's installed
 `@playwright/test` or `playwright`, and `playwright-cli` drives interactive

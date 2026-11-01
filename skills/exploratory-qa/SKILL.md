@@ -17,14 +17,15 @@ animation that a still frame cannot show.
 
 ## Load project context
 
-Read applicable repository instructions and the repository root's
-`.agents/project-context/runtime.md` and `qa-map.md` when present, regardless of
-where this skill is installed. Check relevant facts against the current checkout.
-If absent, inspect setup docs, manifests, dev scripts, routes/navigation, roles,
-and fixtures to learn enough for the requested pass. Do not block focused QA on
-a full feature inventory. For initial setup or a durable feature map, use
-`setup-project-skills` if installed; otherwise document discovered facts at those
-paths when setup is requested. Keep discovered features distinct from tested ones.
+Read applicable repository instructions. At the repository root, regardless of
+where this skill is installed, use the scripts in `.agents/project-context/qa-scripts/`
+to start the app and sign in, and read `.agents/project-context/qa-map.md` for
+the features and journeys, when present. Read a script before you run it, and
+check it against the current checkout. If they are absent, inspect setup docs,
+manifests, dev scripts, and fixtures to learn enough for the requested pass. Do
+not block focused QA on a feature map. To write the scripts or the map, use
+`setup-exploratory-qa` if installed. Keep discovered features distinct from
+tested ones.
 
 ## Reach the intended app
 
