@@ -10,6 +10,7 @@ Personal, reusable Agent Skills for Codex, Claude Code, and Cursor: instructions
 | [setup-project-skills](skills/setup-project-skills/SKILL.md) | Document a codebase's runtime, QA features, and review conventions for installed skills. | Ready. |
 | [address-feedback](skills/address-feedback/SKILL.md) | Investigate and fix actionable PR or merge-request feedback. | Ready. |
 | [exploratory-qa](skills/exploratory-qa/SKILL.md) | Explore app flows and visual states, capture evidence, and report defects and coverage. | Ready. |
+| [durable-comments](skills/durable-comments/SKILL.md) | Write source comments that keep reasons and constraints, not narration; optional Claude Code hook caps comment length. | Ready. |
 
 ## Use a skill
 

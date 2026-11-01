@@ -1,0 +1,4 @@
+interface:
+  display_name: "Durable Comments"
+  short_description: "Write source comments that stay true and useful"
+  default_prompt: "Use $durable-comments to review the comments in this change."
