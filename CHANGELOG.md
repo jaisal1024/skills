@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/jaisal1024/skills/compare/v1.5.0...v1.6.0) (2026-11-01)
+
+
+### Features
+
+* **setup-exploratory-qa:** rename setup-project-skills and limit it to QA scripts and a feature map ([#14](https://github.com/jaisal1024/skills/issues/14)) ([526d22f](https://github.com/jaisal1024/skills/commit/526d22f347c5bd7b201dc849ff872bf6899ed1c5))
+
 ## [1.5.0](https://github.com/jaisal1024/skills/compare/v1.4.0...v1.5.0) (2026-11-01)
 
 
