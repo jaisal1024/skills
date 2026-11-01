@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/jaisal1024/skills/compare/v1.3.0...v1.4.0) (2026-11-01)
+
+
+### Features
+
+* **exploratory-qa:** drive passes with playwright-cli and hand back before sharing ([#10](https://github.com/jaisal1024/skills/issues/10)) ([056522e](https://github.com/jaisal1024/skills/commit/056522e5afae57fe0465ce113448837e465e94b4))
+
 ## [1.3.0](https://github.com/jaisal1024/skills/compare/v1.2.0...v1.3.0) (2026-11-01)
 
 
