@@ -43,7 +43,8 @@ The outer pagination covers threads, not each thread's comments. When a
 thread's `comments.pageInfo.hasNextPage` is true, use its node ID in a separate
 GraphQL `node(id: ...) { ... on PullRequestReviewThread { comments(first:50,
 after: ...) { pageInfo { hasNextPage endCursor } nodes { id author { login }
-body } } } }` query, following that connection's cursor until complete. Keep
-thread/comment IDs when recording decisions so replies and fixes remain
-traceable. Compare unresolved feedback with the current code; outdated line
+body } } } }` query, following that connection's cursor until complete. Record
+each thread or comment ID in the ledger so replies and fixes remain traceable.
+Count the unresolved threads, non-empty review bodies, and conversation
+comments returned; every one must map to at least one ledger row. Compare unresolved feedback with the current code; outdated line
 locations do not necessarily mean an issue is fixed.
