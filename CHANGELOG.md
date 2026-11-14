@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/jaisal1024/skills/compare/v1.6.0...v1.7.0) (2026-11-14)
+
+
+### Features
+
+* **address-feedback:** track every feedback item in a ledger ([#18](https://github.com/jaisal1024/skills/issues/18)) ([79594e3](https://github.com/jaisal1024/skills/commit/79594e3fea6c87b3b6b8117519e1706ada211ea0))
+
 ## [1.6.0](https://github.com/jaisal1024/skills/compare/v1.5.0...v1.6.0) (2026-11-01)
 
 
