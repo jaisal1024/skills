@@ -34,9 +34,10 @@ writing its rows, since a later reply can change or withdraw the ask. Include
 already-addressed and inapplicable items; excluding them hides whether they
 were considered.
 
-Keep the ledger in the host's task tracker or a scratch file outside the
-repository, and update each row as work proceeds so it survives a long run.
-Every row must end in one status: `fixed`, `already addressed`, `not
+Keep the ledger in a scratch file outside the repository, such as one in a
+temporary directory, and update each row as work proceeds so it survives a long
+run. If the agent has a built-in todo list (Claude Code's task list, Cursor's
+todos), also add one entry per row so progress is visible to the user. Every row must end in one status: `fixed`, `already addressed`, `not
 applicable`, or `needs decision`.
 
 Before reporting, re-read each item's original text against the final diff and
